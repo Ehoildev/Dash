@@ -1,0 +1,32 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>FRC Live Dashboard</title>
+    <link rel="stylesheet" href="styles.css">
+    <script defer src="script.js"></script>
+</head>
+<body>
+    <div class="dashboard">
+        <!-- Left Side: Rankings & Matches -->
+        <div class="info-panel">
+            <h2>Team Ranking</h2>
+            <p id="ranking">Loading...</p>
+
+            <h2>Upcoming Matches</h2>
+            <ul id="matches">Loading...</ul>
+
+            <h2>Current Match Time</h2>
+            <p id="match-timer">Waiting for data...</p>
+        </div>
+
+        <!-- Right Side: Live Stream -->
+        <div class="stream-panel">
+            <iframe id="live-stream" src="https://www.twitch.tv/embed/YOUR_EVENT_STREAM?parent=localhost" 
+                allowfullscreen>
+            </iframe>
+        </div>
+    </div>
+</body>
+</html>
