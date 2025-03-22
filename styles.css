@@ -2,52 +2,163 @@ body {
     font-family: 'Roboto Mono', monospace;
     margin: 0;
     padding: 0;
-    background-color: #f4f4f4;
+    background-color: #ff8000;
   }
   
   .dashboard {
     display: flex;
     height: 100vh;
+    gap: 20px;
+    padding: 17px;
+    box-sizing: border-box;
   }
   
-  /* Stream Container (Left Side) */
+  /* Stream Container (Right Side) */
   .stream-container {
-    flex: 1;
-    position: relative;
-    padding-bottom: 56.25%; /* 16:9 Aspect Ratio */
-    height: 0;
-    order: 1; /* Move stream to the left */
+    flex: 3; /* Increase the flex ratio to make the stream wider */
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    background-color: #000;
+    overflow: hidden;
+    order: 2;
+    padding: 20px;
   }
   
   .stream-container iframe {
-    position: absolute;
-    top: 0;
-    left: 0;
     width: 100%;
     height: 100%;
+    aspect-ratio: 16 / 9;
+    object-fit: cover;
   }
   
-  /* Data Container (Right Side) */
+  /* Data Container (Left Side) */
   .data-container {
-    flex: 1;
-    padding: 20px;
+    flex: 1; /* Reduce the flex ratio to make the data section narrower */
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+    height: 100%; /* Ensure the container takes full height */
+  }
+  
+  .block {
     background-color: #fff;
-    overflow-y: auto;
-    order: 2; /* Move data to the right */
+    border: 1px solid #ddd;
+    border-radius: 8px;
+    padding: 20px;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
   }
   
-  .team-info, .match-list {
-    margin-bottom: 20px;
+  .block h2, .block h3 {
+    margin-top: 0;
+    color: #333333;
   }
   
-  .match-list ul {
-    list-style-type: none;
-    padding: 0;
+  .block p {
+    margin: 10px 0;
+    color: #555;
   }
   
-  .match-list li {
-    background-color: #e0e0e0;
-    margin: 5px 0;
-    padding: 10px;
-    border-radius: 5px;
+  /* Match List Box */
+  .match-list {
+    flex: 1; /* Make the match schedule box stretch to the bottom */
+    display: flex;
+    flex-direction: column;
+    overflow: hidden; /* Prevent the entire box from scrolling */
+  }
+  
+  .match-list h3 {
+    margin-bottom: 10px; /* Add spacing below the heading */
+  }
+  
+  .match-list table {
+    width: 100%;
+    border-collapse: collapse;
+    font-size: 16px; /* Reduced font size from 18px to 16px */
+    display: flex;
+    flex-direction: column;
+    height: 100%; /* Ensure the table takes full height */
+  }
+  
+  .match-list thead,
+  .match-list tbody {
+    display: block; /* Enable scrolling */
+  }
+  
+  .match-list thead {
+    width: 100%; /* Ensure the header takes full width */
+  }
+  
+  .match-list tbody {
+    flex: 1; /* Make the body stretch to fill the remaining space */
+    overflow-y: auto; /* Add vertical scrollbar */
+    scrollbar-width: none; /* Hide scrollbar in Firefox */
+  }
+  
+  .match-list tbody::-webkit-scrollbar {
+    display: none; /* Hide scrollbar in Chrome, Safari, and Edge */
+  }
+  
+  .match-list th, .match-list td {
+    padding: 5px; /* Reduced padding for smaller gaps */
+    text-align: center; /* Center-align content */
+    border-bottom: 1px solid #ddd;
+  }
+  
+  .match-list th {
+    background-color: #f4f4f4;
+    font-weight: bold;
+    color: #333;
+    position: sticky; /* Make the headings sticky */
+    top: 0; /* Stick to the top of the container */
+    z-index: 1; /* Ensure headings stay above the table rows */
+  }
+  
+  .match-list tr:hover {
+    background-color: #f9f9f9;
+  }
+  
+  .match-list td {
+    color: #555;
+  }
+  
+  /* Adjust column widths */
+  .match-list th:nth-child(1), .match-list td:nth-child(1) {
+    width: 10%; /* Match column - smaller */
+  }
+  
+  .match-list th:nth-child(2), .match-list td:nth-child(2) {
+    width: 20%; /* Time column - unchanged */
+  }
+  
+  .match-list th:nth-child(3), .match-list td:nth-child(3) {
+    width: 45%; /* Alliances column - larger */
+  }
+  
+  .match-list th:nth-child(4), .match-list td:nth-child(4) {
+    width: 15%; /* Result column - unchanged */
+  }
+  
+  .match-list th:nth-child(5), .match-list td:nth-child(5) {
+    width: 10%; /* RP column - smaller */
+  }
+  
+  /* Ensure column widths match between thead and tbody */
+  .match-list thead tr,
+  .match-list tbody tr {
+    display: table;
+    width: 100%;
+    table-layout: fixed; /* Ensure consistent column widths */
+  }
+  
+  .match-list thead tr {
+    width: 100%; /* Ensure the header takes full width */
+  }
+  
+  /* Add a placeholder row to ensure consistent column widths */
+  .match-list tbody::after {
+    content: '';
+    display: table-row;
+    height: 1px; /* Minimal height to ensure the row exists */
+    visibility: hidden; /* Hide the placeholder row */
   }

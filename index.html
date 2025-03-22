@@ -3,30 +3,48 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>FRC Dashboard</title>
+  <title>My Dashboard</title>
   <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Roboto+Mono:wght@400;700&display=swap">
   <link rel="stylesheet" href="styles.css">
 </head>
 <body>
   <div class="dashboard">
-    <!-- Right Side: Data -->
+    <!-- Left Side: Data -->
     <div class="data-container">
-      <h1>FRC Dashboard</h1>
-      <div class="team-info">
+      <h1>Buh</h1>
+
+      <!-- Team Info Block -->
+      <div class="block team-info">
         <h2>Team <span id="team-number">XXXX</span></h2>
         <p>Rank: <span id="team-rank">Loading...</span></p>
         <p>Next Match: <span id="next-match-time">Loading...</span></p>
       </div>
-      <div class="match-list">
-        <h3>Upcoming Matches</h3>
-        <ul id="match-list"></ul>
+
+      <!-- Match Schedule Block -->
+      <div class="block match-list">
+        <h3>Match Schedule</h3>
+        <table id="match-table">
+          <thead>
+            <tr>
+              <th>Match</th>
+              <th>Time</th>
+              <th>Alliances</th>
+              <th>Result</th>
+              <th>RP</th>
+            </tr>
+          </thead>
+          <tbody>
+            <!-- Rows will be dynamically added here -->
+          </tbody>
+        </table>
       </div>
     </div>
 
-    <!-- Left Side: Stream -->
-    <div class="stream-container">
+    <!-- Right Side: Stream -->
+    <div class="block stream-container">
       <iframe
-        src="https://www.youtube.com/embed/your-stream-id"
+        id="stream-iframe"
+        src="https://player.twitch.tv/?channel=firstinspires33&parent=https://ehoildev.github.io/Dash/" <!-- Replace with your Twitch channel and domain -->
         frameborder="0"
         allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
         allowfullscreen>
