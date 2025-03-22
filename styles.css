@@ -1,5 +1,5 @@
 body {
-    font-family: Arial, sans-serif;
+    font-family: 'Roboto Mono', monospace;
     margin: 0;
     padding: 0;
     background-color: #f4f4f4;
@@ -10,11 +10,13 @@ body {
     height: 100vh;
   }
   
+  /* Stream Container (Left Side) */
   .stream-container {
     flex: 1;
     position: relative;
     padding-bottom: 56.25%; /* 16:9 Aspect Ratio */
     height: 0;
+    order: 1; /* Move stream to the left */
   }
   
   .stream-container iframe {
@@ -25,11 +27,13 @@ body {
     height: 100%;
   }
   
+  /* Data Container (Right Side) */
   .data-container {
     flex: 1;
     padding: 20px;
     background-color: #fff;
     overflow-y: auto;
+    order: 2; /* Move data to the right */
   }
   
   .team-info, .match-list {
