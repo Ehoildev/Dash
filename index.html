@@ -1,32 +1,38 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>FRC Live Dashboard</title>
-    <link rel="stylesheet" href="styles.css">
-    <script defer src="script.js"></script>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>FRC Dashboard</title>
+  <link rel="stylesheet" href="styles.css">
 </head>
 <body>
-    <div class="dashboard">
-        <!-- Left Side: Rankings & Matches -->
-        <div class="info-panel">
-            <h2>Team Ranking</h2>
-            <p id="ranking">Loading...</p>
-
-            <h2>Upcoming Matches</h2>
-            <ul id="matches">Loading...</ul>
-
-            <h2>Current Match Time</h2>
-            <p id="match-timer">Waiting for data...</p>
-        </div>
-
-        <!-- Right Side: Live Stream -->
-        <div class="stream-panel">
-            <iframe id="live-stream" src="https://www.twitch.tv/embed/YOUR_EVENT_STREAM?parent=localhost" 
-                allowfullscreen>
-            </iframe>
-        </div>
+  <div class="dashboard">
+    <!-- Left Side: Stream -->
+    <div class="stream-container">
+      <iframe
+        src="https://www.youtube.com/embed/your-stream-id"
+        frameborder="0"
+        allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+        allowfullscreen>
+      </iframe>
     </div>
+
+    <!-- Right Side: Data -->
+    <div class="data-container">
+      <h1>FRC Dashboard</h1>
+      <div class="team-info">
+        <h2>Team <span id="team-number">XXXX</span></h2>
+        <p>Rank: <span id="team-rank">Loading...</span></p>
+        <p>Next Match: <span id="next-match-time">Loading...</span></p>
+      </div>
+      <div class="match-list">
+        <h3>Upcoming Matches</h3>
+        <ul id="match-list"></ul>
+      </div>
+    </div>
+  </div>
+
+  <script src="script.js"></script>
 </body>
 </html>

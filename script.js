@@ -1,75 +1,64 @@
-const TBA_API_KEY = "unUs8njmymN9rrSQ1f27THOCjQEyqkCV3Jt4z3r6bcuQfuvnCltB99KhsuiWTaHW";
-const EVENT_KEY = "camb";  // Example: "2024casj"
-const TEAM_NUMBER = "604";  // Example: 254
+const TBA_API_KEY = 'unUs8njmymN9rrSQ1f27THOCjQEyqkCV3Jt4z3r6bcuQfuvnCltB99KhsuiWTaHW	';
+const TEAM_NUMBER = '604'; // Example team number (The Cheesy Poofs)
+const EVENT_KEY = '2025camb'; // Example event key (replace with your event)
+
+// DOM Elements
+const teamRankElement = document.getElementById('team-rank');
+const nextMatchTimeElement = document.getElementById('next-match-time');
+const matchListElement = document.getElementById('match-list');
 
 // Fetch data from TBA API
-async function fetchTBAData(endpoint) {
-    const response = await fetch(`https://www.thebluealliance.com/api/v3${endpoint}`, {
-        headers: { "X-TBA-Auth-Key": TBA_API_KEY }
-    });
-    return response.json();
+async function fetchData(url) {
+  const response = await fetch(url, {
+    headers: { 'X-TBA-Auth-Key': TBA_API_KEY }
+  });
+  return await response.json();
 }
 
-// Load rankings
-async function loadRanking() {
-    const data = await fetchTBAData(`/event/${EVENT_KEY}/rankings`);
-    const rankingData = data.rankings.find(r => r.team_key === `frc${TEAM_NUMBER}`);
-    
-    if (rankingData) {
-        document.getElementById("ranking").textContent = 
-            `Rank: ${rankingData.rank} | W: ${rankingData.record.wins}, L: ${rankingData.record.losses}, T: ${rankingData.record.ties}`;
-    } else {
-        document.getElementById("ranking").textContent = "No ranking data available";
-    }
+// Get team rank
+async function getTeamRank() {
+  const url = `https://www.thebluealliance.com/api/v3/team/frc${TEAM_NUMBER}/event/${EVENT_KEY}/status`;
+  const data = await fetchData(url);
+  teamRankElement.textContent = data.qual?.ranking?.rank || 'N/A';
 }
 
-// Load upcoming matches
-async function loadMatches() {
-    const matches = await fetchTBAData(`/team/frc${TEAM_NUMBER}/event/${EVENT_KEY}/matches`);
-    const upcomingMatches = matches.filter(m => m.predicted_time && m.actual_time === null);
+// Get next match and time left
+async function getNextMatch() {
+  const url = `https://www.thebluealliance.com/api/v3/team/frc${TEAM_NUMBER}/event/${EVENT_KEY}/matches`;
+  const matches = await fetchData(url);
+  const upcomingMatches = matches.filter(match => match.actual_time === null).sort((a, b) => a.time - b.time);
 
-    const matchList = document.getElementById("matches");
-    matchList.innerHTML = "";
-    
-    upcomingMatches.slice(0, 5).forEach(match => {
-        const time = new Date(match.predicted_time * 1000).toLocaleTimeString();
-        const matchItem = document.createElement("li");
-        matchItem.textContent = `Match ${match.match_number} - ${time}`;
-        matchList.appendChild(matchItem);
-    });
+  if (upcomingMatches.length > 0) {
+    const nextMatch = upcomingMatches[0];
+    const matchTime = new Date(nextMatch.time * 1000);
+    const timeLeft = Math.max(0, matchTime - Date.now());
+
+    const hours = Math.floor(timeLeft / (1000 * 60 * 60));
+    const minutes = Math.floor((timeLeft % (1000 * 60 * 60)) / (1000 * 60));
+    nextMatchTimeElement.textContent = `${hours}h ${minutes}m`;
+  } else {
+    nextMatchTimeElement.textContent = 'No upcoming matches';
+  }
 }
 
-// Check current match and update the timer
-async function updateMatchTimer() {
-    const matches = await fetchTBAData(`/team/frc${TEAM_NUMBER}/event/${EVENT_KEY}/matches`);
-    const ongoingMatch = matches.find(m => m.actual_time && !m.post_result_time);
-    
-    if (ongoingMatch) {
-        const startTime = new Date(ongoingMatch.actual_time * 1000);
-        const elapsedTime = (Date.now() - startTime.getTime()) / 1000;
-        const matchDuration = 150; // Typical FRC match length (150 seconds)
+// Get match list
+async function getMatchList() {
+  const url = `https://www.thebluealliance.com/api/v3/team/frc${TEAM_NUMBER}/event/${EVENT_KEY}/matches`;
+  const matches = await fetchData(url);
+  const upcomingMatches = matches.filter(match => match.actual_time === null).sort((a, b) => a.time - b.time);
 
-        if (elapsedTime < matchDuration) {
-            const remainingTime = Math.max(0, matchDuration - elapsedTime);
-            document.getElementById("match-timer").textContent = `${Math.floor(remainingTime)}s remaining`;
-        } else {
-            document.getElementById("match-timer").textContent = "Match over";
-        }
-    } else {
-        document.getElementById("match-timer").textContent = "No active match";
-    }
+  matchListElement.innerHTML = upcomingMatches.map(match => `
+    <li>
+      Match ${match.match_number} - ${new Date(match.time * 1000).toLocaleString()}
+    </li>
+  `).join('');
 }
 
-// Auto-refresh data every 5 seconds
-function startDashboard() {
-    loadRanking();
-    loadMatches();
-    updateMatchTimer();
-    setInterval(() => {
-        loadRanking();
-        loadMatches();
-        updateMatchTimer();
-    }, 5000);
+// Initialize dashboard
+async function initDashboard() {
+  await getTeamRank();
+  await getNextMatch();
+  await getMatchList();
 }
 
-document.addEventListener("DOMContentLoaded", startDashboard);
+initDashboard();
