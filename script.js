@@ -55,88 +55,92 @@ async function getNextMatch() {
 
 // Get match list and display in table
 async function getMatchList() {
-  const url = `https://www.thebluealliance.com/api/v3/team/frc${TEAM_NUMBER}/event/${EVENT_KEY}/matches`;
-  const matches = await fetchData(url);
-
-  // Filter matches to only include those involving the specified team
-  const teamMatches = matches.filter(match =>
-    match.alliances.red.team_keys.includes(`frc${TEAM_NUMBER}`) ||
-    match.alliances.blue.team_keys.includes(`frc${TEAM_NUMBER}`)
-  );
-
-  // Sort matches by time
-  teamMatches.sort((a, b) => a.time - b.time);
-
-  // Clear existing table rows
-  matchTableBody.innerHTML = '';
-
-  // Add rows for each match
-  teamMatches.forEach(match => {
-    const row = document.createElement('tr');
-
-    // Match number
-    const matchNumberCell = document.createElement('td');
-    let matchLabel = '';
-
-    if (match.comp_level === 'qm') {
-      // Qualifying matches
-      matchLabel = `Q${match.match_number}`;
-    } else if (match.comp_level === 'sf') {
-      // Semifinal matches
-      matchLabel = `P${match.match_number}`;
-    } else if (match.comp_level === 'f') {
-      // Final matches
-      matchLabel = `F${match.match_number}`;
-    }
-    matchNumberCell.textContent = matchLabel;
-    row.appendChild(matchNumberCell);
-
-    // Match time
-    const matchTimeCell = document.createElement('td');
-    const matchTime = new Date(match.time * 1000);
-    const options = { month: 'numeric', day: 'numeric', hour: 'numeric', minute: 'numeric' };
-    matchTimeCell.textContent = matchTime.toLocaleString('en-US', options);
-    row.appendChild(matchTimeCell);
-
-    // Alliances (Red on top, Blue below)
-    const alliancesCell = document.createElement('td');
-    const redAlliance = match.alliances.red.team_keys.map(team => team.replace('frc', '')).join(', ');
-    const blueAlliance = match.alliances.blue.team_keys.map(team => team.replace('frc', '')).join(', ');
-    alliancesCell.innerHTML = `<strong>Red:</strong> ${redAlliance}<br><strong>Blue:</strong> ${blueAlliance}`;
-    row.appendChild(alliancesCell);
-
-    // Result (Win, Loss, or Tie)
-    const resultCell = document.createElement('td');
-    if (match.actual_time) {
-      const teamAlliance = match.alliances.blue.team_keys.includes(`frc${TEAM_NUMBER}`) ? 'blue' : 'red';
-      const winningAlliance = match.winning_alliance;
-
-      if (winningAlliance === teamAlliance) {
-        resultCell.textContent = 'Win';
-      } else if (winningAlliance === '') {
-        resultCell.textContent = 'Tie';
-      } else {
-        resultCell.textContent = 'Loss';
+    const url = `https://www.thebluealliance.com/api/v3/team/frc${TEAM_NUMBER}/event/${EVENT_KEY}/matches`;
+    const matches = await fetchData(url);
+  
+    // Filter matches to only include those involving the specified team
+    const teamMatches = matches.filter(match =>
+      match.alliances.red.team_keys.includes(`frc${TEAM_NUMBER}`) ||
+      match.alliances.blue.team_keys.includes(`frc${TEAM_NUMBER}`)
+    );
+  
+    // Sort matches by time
+    teamMatches.sort((a, b) => a.time - b.time);
+  
+    // Clear existing table rows
+    matchTableBody.innerHTML = '';
+  
+    // Track playoff match numbers
+    let playoffMatchCounter = 1;
+  
+    // Add rows for each match
+    teamMatches.forEach(match => {
+      const row = document.createElement('tr');
+  
+      // Match number
+      const matchNumberCell = document.createElement('td');
+      let matchLabel = '';
+  
+      if (match.comp_level === 'qm') {
+        // Qualifying matches
+        matchLabel = `Q${match.match_number}`;
+      } else if (match.comp_level === 'sf') {
+        // Semifinal matches
+        matchLabel = `P${playoffMatchCounter}`;
+        playoffMatchCounter++; // Increment the counter for each playoff match
+      } else if (match.comp_level === 'f') {
+        // Final matches
+        matchLabel = `F${match.match_number}`;
       }
-    } else {
-      resultCell.textContent = 'Not played';
-    }
-    row.appendChild(resultCell);
-
-    // Ranking points (from TBA score_breakdown)
-    const rankingPointsCell = document.createElement('td');
-    if (match.actual_time && match.score_breakdown) {
-      const teamAlliance = match.alliances.blue.team_keys.includes(`frc${TEAM_NUMBER}`) ? 'blue' : 'red';
-      const rankingPoints = match.score_breakdown[teamAlliance]?.rp || 0;
-      rankingPointsCell.textContent = rankingPoints;
-    } else {
-      rankingPointsCell.textContent = '-';
-    }
-    row.appendChild(rankingPointsCell);
-
-    // Add row to table
-    matchTableBody.appendChild(row);
-  });
+      matchNumberCell.textContent = matchLabel;
+      row.appendChild(matchNumberCell);
+  
+      // Match time
+      const matchTimeCell = document.createElement('td');
+      const matchTime = new Date(match.time * 1000);
+      const options = { month: 'numeric', day: 'numeric', hour: 'numeric', minute: 'numeric' };
+      matchTimeCell.textContent = matchTime.toLocaleString('en-US', options);
+      row.appendChild(matchTimeCell);
+  
+      // Alliances (Red on top, Blue below)
+      const alliancesCell = document.createElement('td');
+      const redAlliance = match.alliances.red.team_keys.map(team => team.replace('frc', '')).join(', ');
+      const blueAlliance = match.alliances.blue.team_keys.map(team => team.replace('frc', '')).join(', ');
+      alliancesCell.innerHTML = `<strong>Red:</strong> ${redAlliance}<br><strong>Blue:</strong> ${blueAlliance}`;
+      row.appendChild(alliancesCell);
+  
+      // Result (Win, Loss, or Tie)
+      const resultCell = document.createElement('td');
+      if (match.actual_time) {
+        const teamAlliance = match.alliances.blue.team_keys.includes(`frc${TEAM_NUMBER}`) ? 'blue' : 'red';
+        const winningAlliance = match.winning_alliance;
+  
+        if (winningAlliance === teamAlliance) {
+          resultCell.textContent = 'Win';
+        } else if (winningAlliance === '') {
+          resultCell.textContent = 'Tie';
+        } else {
+          resultCell.textContent = 'Loss';
+        }
+      } else {
+        resultCell.textContent = 'Not played';
+      }
+      row.appendChild(resultCell);
+  
+      // Ranking points (from TBA score_breakdown)
+      const rankingPointsCell = document.createElement('td');
+      if (match.actual_time && match.score_breakdown) {
+        const teamAlliance = match.alliances.blue.team_keys.includes(`frc${TEAM_NUMBER}`) ? 'blue' : 'red';
+        const rankingPoints = match.score_breakdown[teamAlliance]?.rp || 0;
+        rankingPointsCell.textContent = rankingPoints;
+      } else {
+        rankingPointsCell.textContent = '-';
+      }
+      row.appendChild(rankingPointsCell);
+  
+      // Add row to table
+      matchTableBody.appendChild(row);
+    });
 }
 
 // Initialize dashboard

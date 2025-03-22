@@ -93,6 +93,7 @@ body {
     flex: 1; /* Make the body stretch to fill the remaining space */
     overflow-y: auto; /* Add vertical scrollbar */
     scrollbar-width: none; /* Hide scrollbar in Firefox */
+    margin-bottom: 30px; /* Add space at the bottom of the table body */
   }
   
   .match-list tbody::-webkit-scrollbar {
@@ -128,19 +129,19 @@ body {
   }
   
   .match-list th:nth-child(2), .match-list td:nth-child(2) {
-    width: 20%; /* Time column - unchanged */
+    width: 25%; /* Time column - unchanged */
   }
   
   .match-list th:nth-child(3), .match-list td:nth-child(3) {
-    width: 45%; /* Alliances column - larger */
+    width: 47%; /* Alliances column - larger */
   }
   
   .match-list th:nth-child(4), .match-list td:nth-child(4) {
-    width: 15%; /* Result column - unchanged */
+    width: 13%; /* Result column - unchanged */
   }
   
   .match-list th:nth-child(5), .match-list td:nth-child(5) {
-    width: 10%; /* RP column - smaller */
+    width: 5%; /* RP column - smaller */
   }
   
   /* Ensure column widths match between thead and tbody */
@@ -153,12 +154,4 @@ body {
   
   .match-list thead tr {
     width: 100%; /* Ensure the header takes full width */
-  }
-  
-  /* Add a placeholder row to ensure consistent column widths */
-  .match-list tbody::after {
-    content: '';
-    display: table-row;
-    height: 1px; /* Minimal height to ensure the row exists */
-    visibility: hidden; /* Hide the placeholder row */
   }
