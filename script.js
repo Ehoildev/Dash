@@ -1,6 +1,6 @@
 const TBA_API_KEY = 'unUs8njmymN9rrSQ1f27THOCjQEyqkCV3Jt4z3r6bcuQfuvnCltB99KhsuiWTaHW';
-const TEAM_NUMBER = '604'; // Example team number (The Cheesy Poofs)
-const EVENT_KEY = '2025camb'; // Example event key (replace with your event)
+const TEAM_NUMBER = '1690'; // Example team number (The Cheesy Poofs)
+const EVENT_KEY = '2025iscmp'; // Example event key (replace with your event)
 
 // DOM Elements
 const teamNumberElement = document.getElementById('team-number');
